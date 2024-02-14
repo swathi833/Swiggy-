@@ -22,11 +22,21 @@ try{
 }}
 connectToDb()
 
+
+/**
+ * /add-restaurant : post
+ * /get-restaurant-details : get
+ * /update-restaurant-detail : patch
+ * /delete-restaurant-detail : delete
+ * /create-new-user : post
+ * /validate-user : post
+ */
+
 app.post('/add-restaurant',async function(request,response){
 try{
     await Restaurant.create({
         "areaName":request.body.areaName,
-        "avgRating":request.body.avgRating,
+        "avgRating":request.body.avgRating,jffkff,
         "costForTwo":request.body.costForTwo,
         "cuisines":request.body.cuisines,
         "name":request.body.name,
@@ -58,6 +68,31 @@ app.get('/get-restaurant-details', async function(request, response) {
         })
     }
 })
+ 
+app.delete('/delete-restaurant-detail/:id', async function(request, response) {
+    try {
+        const restaurant = await Restaurant.findById(request.params.id)
+        if(restaurant) {
+            await Restaurant.findByIdAndDelete(request.params.id)
+            response.status(200).json({
+                "status" : "success",
+                "message" : "deleted successfully"
+            })
+        } else { //restaurant : null
+            response.status(404).json({
+                "status" : "failure",
+                "message" : "entry not found"
+            })
+        }
+    } catch(error) {
+        response.status(500).json({
+            "status" : "failure",
+            "message" : "could not delete",
+            "error" : error
+        })
+    }
+}) 
+
 
 app.post('/create-new-user', async function(request, response) {
     try {
